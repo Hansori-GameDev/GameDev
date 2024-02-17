@@ -47,7 +47,7 @@ public class Manager : MonoBehaviour
             // 매니저 파괴 방지
             DontDestroyOnLoad(go);
 
-            // 동적으로 생성한 매니저 객체에 Manager 컴포넌트 부
+            // 동적으로 생성한 매니저 객체에 Manager 컴포넌트 부여
             s_instance = go.GetComponent<Manager>();
         }
     }
