@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class UIManager
 {
+    // private 버튼
     Button uiButton;
 
     // 버튼 이미지 변경 메서드

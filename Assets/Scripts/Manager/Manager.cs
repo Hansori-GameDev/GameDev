@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 모든 스크립트에서는 이 매니저(Manager.X)를 통해 다양한 컨트롤 가능
 public class Manager : MonoBehaviour
 {
     // Singleton Pattern
