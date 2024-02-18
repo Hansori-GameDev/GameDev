@@ -5,14 +5,13 @@ using UnityEngine;
 
 public class InputManager
 {
-    public Action KeyAction = null;
+    public Action KeyAction = null; // 키 입력 발생 시, 실행되는 코	
 
-    // Update is called once per frame
     public void OnUpdate()
     {
-        if (Input.anyKey == false)
+        if (Input.anyKey == false)  // 키 입력 미발생 , Action 실행하지 않음	
             return;
-        if (KeyAction != null)
+        if (KeyAction != null)  // 키 입력이 발생했고 KeyAction이 정의되어있을 시, Action 실행
             KeyAction.Invoke();
     }
 }
