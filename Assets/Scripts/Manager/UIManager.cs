@@ -3,9 +3,10 @@ using UnityEngine.UI;
 
 public class UIManager
 {
-    // private 버튼
+    // 화면 우측 하단 상호작용 버튼
     Button uiButton;
 
+    // 인벤토리 위치
     Transform inventoryPos;
 
     // 인벤토리 위치 Setter
@@ -37,7 +38,7 @@ public class UIManager
     public void interactionButtonOnClick(Collider2D collision)
     {
         uiButton.onClick.RemoveAllListeners();
-        uiButton.onClick.AddListener(() => OnButtonClickDuringInteraction());
+        uiButton.onClick.AddListener(() => OnButtonClickDuringInteraction(collision.gameObject));
     }
 
     // 아이템 먹기 버튼 활성화
@@ -54,9 +55,9 @@ public class UIManager
     }
 
     // 상호작용 버튼 클릭 시 수행할 동작
-    public void OnButtonClickDuringInteraction()
+    public void OnButtonClickDuringInteraction(GameObject collidedObject)
     {
-
+        Debug.Log(collidedObject.name + " 충돌 중일 때 버튼이 클릭되었습니다.");
     }
 
     // 아이템 먹기 버튼 클릭 시 수행할 동작
