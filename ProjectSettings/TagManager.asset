@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Doll
+  - Wall
   layers:
   - Default
   - TransparentFX
