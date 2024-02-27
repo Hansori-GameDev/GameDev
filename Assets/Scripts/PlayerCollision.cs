@@ -52,11 +52,13 @@ public class PlayerCollision : MonoBehaviour
         }
     }
 
+    /*
     // 물체와 충돌 중일 경우
     private void OnTriggerStay2D(Collider2D collision)
     {
         Debug.Log(collision.gameObject.name + " 충돌 중!");
     }
+    */
 
     // 물체와 충돌 종료 시
     private void OnTriggerExit2D(Collider2D collision)
