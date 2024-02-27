@@ -58,6 +58,47 @@ public class UIManager
     public void OnButtonClickDuringInteraction(GameObject collidedObject)
     {
         Debug.Log(collidedObject.name + " 충돌 중일 때 버튼이 클릭되었습니다.");
+
+        // 솜 보유시 인형에 채워넣음
+        if (collidedObject.tag == "Doll")
+        {
+            if (Manager.Inventory.GetHoldingItem() == "Cotton")
+            {
+                Debug.Log("인형에 솜 넣음");
+                PutCottonInDoll(collidedObject);
+            }
+            else
+            {
+                Debug.Log("들고 있는 아이템이 솜이 아닙니다.");
+            }
+        }
+    }
+
+    // 인형에 솜 넣는 동작
+    private void PutCottonInDoll(GameObject collidedObject)
+    {
+        int currentStateIndex = -1;
+        for (int i = 0; i <= 2; i++)
+        {
+            GameObject currentState = collidedObject.transform.Find("TestDoll_" + i).gameObject;
+            if(currentState.activeSelf)
+            {
+                currentStateIndex = i; break;
+            }
+
+            Debug.Log("현재 PreFab: " + currentState.name);
+        }
+
+        if (currentStateIndex != -1 && currentStateIndex < 2) 
+        {
+            GameObject currentState = collidedObject.transform.Find("TestDoll_" + currentStateIndex).gameObject;
+            currentState.SetActive(false);
+            GameObject nextState = collidedObject.transform.Find("TestDoll_" + (currentStateIndex + 1)).gameObject;
+            nextState.SetActive(true);
+        }
+
+        Manager.Inventory.EmptyInventory();
+        Debug.Log("솜 넣는 처리 완료");
     }
 
     // 아이템 먹기 버튼 클릭 시 수행할 동작
@@ -66,6 +107,10 @@ public class UIManager
         Debug.Log(collidedObject.name + " 충돌 중일 때 버튼이 클릭되었습니다.");
 
         // 충돌한 물체를 새로운 위치로 순간 이동
-        collidedObject.transform.position = inventoryPos.position;
+        if (Manager.Inventory.GetHoldingItem() != "")
+        {
+            Debug.Log("하나의 아이템만 소유할 수 있습니다.");
+        }
+        else collidedObject.transform.position = inventoryPos.position;
     }
 }
