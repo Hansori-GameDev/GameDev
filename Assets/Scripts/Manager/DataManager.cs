@@ -39,6 +39,7 @@ public class DataManager : MonoBehaviour
         string data = JsonUtility.ToJson(nowPlayer);
 
         File.WriteAllText(path + filename, data);
+        Debug.Log(path + filename);
     }
 
     /***
