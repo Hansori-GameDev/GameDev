@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Doll
   - Wall
+  - Item
   layers:
   - Default
   - TransparentFX

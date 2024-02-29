@@ -18,6 +18,9 @@ public class Manager : MonoBehaviour
     UIManager _ui = new UIManager();
     public static UIManager UI { get { return Instance._ui; } }
 
+    InventoryManager _inventory = new InventoryManager();
+    public static InventoryManager Inventory { get { return Instance._inventory; } }
+
     void Start()
     {
         Init();
