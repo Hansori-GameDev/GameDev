@@ -21,6 +21,10 @@ public class Manager : MonoBehaviour
     InventoryManager _inventory = new InventoryManager();
     public static InventoryManager Inventory { get { return Instance._inventory; } }
 
+    // 다른 스크립트에서 Manager.Interaction.X로 매니저 접근 가능
+    InteractionManager _interaction = new InteractionManager();
+    public static InteractionManager Interaction { get { return Instance._interaction; } }
+
     void Start()
     {
         Init();
