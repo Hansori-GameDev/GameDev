@@ -62,7 +62,7 @@ public class UIManager
     // 충돌 중이 아닐 때 클릭 시 수행할 동작
     public void OnButtonClickWithoutCollision()
     {
-        Debug.Log("충돌 중이 아닐 때 버튼이 클릭되었습니다.");
+        Debug.Log("There is nothing to interact!");
     }
 
     // 상호작용 버튼 클릭 시 수행할 동작
