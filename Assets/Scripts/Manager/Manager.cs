@@ -18,6 +18,20 @@ public class Manager : MonoBehaviour
     UIManager _ui = new UIManager();
     public static UIManager UI { get { return Instance._ui; } }
 
+<<<<<<< Updated upstream
+=======
+    // 다른 스크립트에서 Manager.Inventory.X로 매니저 접근 가능
+    InventoryManager _inventory = new InventoryManager();
+    public static InventoryManager Inventory { get { return Instance._inventory; } }
+
+    // 다른 스크립트에서 Manager.Interaction.X로 매니저 접근 가능
+    InteractionManager _interaction = new InteractionManager();
+    public static InteractionManager Interaction { get { return Instance._interaction; } }
+
+    DataManager _data = new DataManager();
+    public static DataManager Data { get { return Instance._data; } }
+
+>>>>>>> Stashed changes
     void Start()
     {
         Init();
