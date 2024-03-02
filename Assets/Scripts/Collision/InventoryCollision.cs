@@ -19,14 +19,14 @@ public class InventoryCollision : MonoBehaviour
         
     }
 
+    // ë§Œì•½ inventoryì— ìˆœê°„ì´ë™í•´ì˜¨ ì˜¤ë¸Œì íŠ¸ê°€ Cottonì¼ ê²½ìš° Logë¥¼ ì¶œë ¥í•˜ê³  Manager.Inventoryì— í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ ì €ì¥
     private void OnTriggerEnter2D(Collider2D collision)
     {
         GameObject item = collision.gameObject;
-        if (!item.CompareTag("Item"))
+        if (item.CompareTag("Cotton"))
         {
-            Debug.Log("ÀÎº¥Åä¸®¿¡ ItemÀÌ ¾Æ´Ñ ¹°Ã¼°¡ ÀÖ½À´Ï´Ù.");
+            Debug.Log("Put Cotton in Inventory!");
+            Manager.Inventory.putItem(item);
         }
-        Debug.Log("ÀÎº¥Åä¸®¿¡ " + item.name + " µé¾î¿È");
-        Manager.Inventory.SetHoldingItem(item);
     }
 }
