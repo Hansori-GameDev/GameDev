@@ -30,4 +30,8 @@ public class InteractionManager
         GameObject.Destroy(cotton); // 해당 솜 오브젝트 파괴
         Debug.Log($"Success to interaction between Doll and {cotton.name} ");
     }
+
+    public void WarpPlayerToOtherFloor(GameObject player, Vector3 pos) {
+        player.transform.position = pos;
+    }
 }
