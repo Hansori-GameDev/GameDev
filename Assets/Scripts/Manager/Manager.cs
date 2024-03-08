@@ -5,6 +5,7 @@ using UnityEngine;
 // 모든 스크립트에서는 이 매니저(Manager.X)를 통해 다양한 컨트롤 가능
 public class Manager : MonoBehaviour
 {
+    
     // Singleton Pattern
 
     static Manager s_instance;  // static을 통한 매니저 유일성 보장	
@@ -24,6 +25,13 @@ public class Manager : MonoBehaviour
     // 다른 스크립트에서 Manager.Interaction.X로 매니저 접근 가능
     InteractionManager _interaction = new InteractionManager();
     public static InteractionManager Interaction { get { return Instance._interaction; } }
+
+    DataManager _data = new DataManager();
+    public static DataManager Data { get { return Instance._data; } }
+
+    void Awake() {
+        _data.setDataPath(Application.persistentDataPath + "/");
+    }
 
     void Start()
     {

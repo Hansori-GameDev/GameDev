@@ -11,7 +11,7 @@ public class UI_MainButtons : MonoBehaviour
     }
 
     public void onClickContinue() {
-        DataManager.instance.LoadData();
+        Manager.Data.LoadData();
         SceneManager.LoadScene("Test_Player");
     }
 
@@ -30,8 +30,8 @@ public class UI_MainButtons : MonoBehaviour
 
         Debug.Log("save" + savePlayer.transform.position.x.ToString() + savePlayer.transform.position.y.ToString());
 
-        DataManager.instance.nowPlayer.PlayerPosX = savePlayer.transform.position.x;
-        DataManager.instance.nowPlayer.PlayerPosY = savePlayer.transform.position.y;
-        DataManager.instance.SaveData();
+        Manager.Data.nowPlayer.PlayerPosX = savePlayer.transform.position.x;
+        Manager.Data.nowPlayer.PlayerPosY = savePlayer.transform.position.y;
+        Manager.Data.SaveData();
     }
 }
