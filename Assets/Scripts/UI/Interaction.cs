@@ -12,8 +12,8 @@ public class Interaction : MonoBehaviour, IPointerDownHandler
     {
         if(isInteractable)
         {
-            // ÅÍÄ¡ ÀÔ·ÂÀÌ ¹ß»ıÇÏ¸é onClick ÀÌº¥Æ® È£Ãâ
-            Debug.Log("Å¬¸¯Çß½À´Ï´Ù!");
+            // í„°ì¹˜ ì…ë ¥ì´ ë°œìƒí•˜ë©´ onClick ì´ë²¤íŠ¸ í˜¸ì¶œ
+            Debug.Log("í´ë¦­í–ˆìŠµë‹ˆë‹¤!");
         }
 
     }

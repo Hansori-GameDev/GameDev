@@ -11,6 +11,8 @@ public class PlayerObject : MonoBehaviour
     void Start()
     {
         _rigid = this.GetComponent<Rigidbody2D>();
+
+        // 저장된데이터 불러오기
         if(Manager.Data.getIsLoad()) {
             transform.position = new Vector3(Manager.Data.nowPlayer.PlayerPosX, Manager.Data.nowPlayer.PlayerPosY, 0);
         } else {

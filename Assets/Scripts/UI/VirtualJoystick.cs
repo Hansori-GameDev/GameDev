@@ -14,26 +14,26 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
         imageController = transform.GetChild(0).GetComponent<Image>();
     }
 
-    // ÅÍÄ¡ ½ÃÀÛ ½Ã 1È¸
+    // í„°ì¹˜ ì‹œì‘ ì‹œ 1íšŒ
     public void OnPointerDown(PointerEventData eventData)
     {
         // Debug.Log("Touch Begin : " + eventData);
     }
 
-    // ÅÍÄ¡ »óÅÂÀÏ ¶§ ¸Å ÇÁ·¹ÀÓ
+    // í„°ì¹˜ ìƒíƒœì¼ ë•Œ ë§¤ í”„ë ˆì„
     public void OnDrag(PointerEventData eventData)
     {
         touchPosition = Vector2.zero;
 
-        // Á¶ÀÌ½ºÆ½ÀÇ À§Ä¡°¡ ¾îµğ¿¡ ÀÖµç µ¿ÀÏÇÑ °ªÀ» ¿¬»êÇÏ±â À§ÇØ
-        // touchPositionÀÇ À§Ä¡ °ªÀº ÀÌ¹ÌÁöÀÇ ÇöÀç À§Ä¡¸¦ ±âÁØÀ¸·Î
-        // ¾ó¸¶³ª ¶³¾îÁ® ÀÖ´ÂÁö¿¡ µû¶ó ´Ù¸£°Ô ³ª¿Â´Ù
+        // ì¡°ì´ìŠ¤í‹±ì˜ ìœ„ì¹˜ê°€ ì–´ë””ì— ìˆë“  ë™ì¼í•œ ê°’ì„ ì—°ì‚°í•˜ê¸° ìœ„í•´
+        // touchPositionì˜ ìœ„ì¹˜ ê°’ì€ ì´ë¯¸ì§€ì˜ í˜„ì¬ ìœ„ì¹˜ë¥¼ ê¸°ì¤€ìœ¼ë¡œ
+        // ì–¼ë§ˆë‚˜ ë–¨ì–´ì ¸ ìˆëŠ”ì§€ì— ë”°ë¼ ë‹¤ë¥´ê²Œ ë‚˜ì˜¨ë‹¤
 
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
             imageBackground.rectTransform, eventData.position, eventData.pressEventCamera, out touchPosition))
         {
-            // touchPosition °ªÀÇ Á¤±ÔÈ­ [0 ~ 1]
-            // touchPositionÀ» ÀÌ¹ÌÁö Å©±â·Î ³ª´®
+            // touchPosition ê°’ì˜ ì •ê·œí™” [0 ~ 1]
+            // touchPositionì„ ì´ë¯¸ì§€ í¬ê¸°ë¡œ ë‚˜ëˆ”
             touchPosition.x = (touchPosition.x / imageBackground.rectTransform.sizeDelta.x);
             touchPosition.y = (touchPosition.y / imageBackground.rectTransform.sizeDelta.y);
 
@@ -48,13 +48,13 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
         }
     }
 
-    // ÅÍÄ¡ Á¾·á ½Ã 1È¸
+    // í„°ì¹˜ ì¢…ë£Œ ì‹œ 1íšŒ
     public void OnPointerUp(PointerEventData eventData)
     {
-        // ÅÍÄ¡ Á¾·á ½Ã ÀÌ¹ÌÁöÀÇ À§Ä¡¸¦ ´Ù½Ã Áß¾ÓÀ¸·Î ¿Å±ä´Ù
+        // í„°ì¹˜ ì¢…ë£Œ ì‹œ ì´ë¯¸ì§€ì˜ ìœ„ì¹˜ë¥¼ ë‹¤ì‹œ ì¤‘ì•™ìœ¼ë¡œ ì˜®ê¸´ë‹¤
         imageController.rectTransform.anchoredPosition = Vector2.zero;
 
-        // ´Ù¸¥ ¿ÀºêÁ§Æ®¿¡¼­ ÀÌµ¿ ¹æÇâÀ¸·Î »ç¿ëÇÏ±â ¶§¹®¿¡ ÀÌµ¿ ¹æÇâµµ ÃÊ±âÈ­
+        // ë‹¤ë¥¸ ì˜¤ë¸Œì íŠ¸ì—ì„œ ì´ë™ ë°©í–¥ìœ¼ë¡œ ì‚¬ìš©í•˜ê¸° ë•Œë¬¸ì— ì´ë™ ë°©í–¥ë„ ì´ˆê¸°í™”
         touchPosition = Vector2.zero;
     }
 
