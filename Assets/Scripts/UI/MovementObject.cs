@@ -7,55 +7,39 @@ public class MovementObject : MonoBehaviour
     [SerializeField]
     private VirtualJoystick virtualJoystick;
     private float movespeed = 10;
-    public Transform player;
 
+    private void Start() {
+        // Ï†ÄÏû•Îêú ÏúÑÏπò Îç∞Ïù¥ÌÑ∞Î∂àÎü¨Ïò§Í∏∞
+        if(Manager.Data.getIsLoad()) {
+            transform.position = new Vector3(Manager.Data.nowPlayer.PlayerPosX, Manager.Data.nowPlayer.PlayerPosY, 0);
+        } else {
+            Debug.Log("Load fail");
+        }
+    }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        float x = virtualJoystick.Horizontal(); // øﬁ / ø¿
-        float y = virtualJoystick.Vertical();   // ¿ß / æ∆∑°
+        float x = virtualJoystick.Horizontal(); // ÔøΩÔøΩ / ÔøΩÔøΩ
+        float y = virtualJoystick.Vertical();   // ÔøΩÔøΩ / ÔøΩ∆∑ÔøΩ
+        
+#if UNITY_EDITOR
+        if (Input.GetKey(KeyCode.W))
+            y = 1f;
+        if (Input.GetKey(KeyCode.S))
+            y = -1f;
+        if (Input.GetKey(KeyCode.A))
+            x = -1f;
+        if (Input.GetKey(KeyCode.D))
+            x = 1f;
+#endif
  
-        if (x!=0 || y!=0)
-        {
-            transform.position += new Vector3(x, y, 0) * movespeed * Time.deltaTime;
+        if (x!=0 || y!=0) {
+            PlayerMove(new Vector2(x, y));
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag=="Item")
-        {
-            Debug.Log("ªÛ»£¿€øÎ");
-
-            GameObject actionKey = GameObject.FindWithTag("ActionKey");
-            Interaction actionKeyInteraction = actionKey.GetComponent<Interaction>();
-
-            if (actionKeyInteraction != null)
-            {
-                // Interaction¿« isInteractable ∞™¿ª true∑Œ º≥¡§
-                actionKeyInteraction.isInteractable = true;
-            }
-
-        }
+    void PlayerMove(Vector2 direction) {
+        transform.Translate(direction * movespeed * Time.fixedDeltaTime);
     }
-
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Item")
-        {
-            Debug.Log("ªÛ»£¿€øÎ ¡æ∑·");
-
-            GameObject actionKey = GameObject.FindWithTag("ActionKey");
-            Interaction actionKeyInteraction = actionKey.GetComponent<Interaction>();
-
-            if (actionKeyInteraction != null)
-            {
-                // Interaction¿« isInteractable ∞™¿ª false∑Œ º≥¡§
-                actionKeyInteraction.isInteractable = false;
-            }
-        }
-        }
-
 
 }
