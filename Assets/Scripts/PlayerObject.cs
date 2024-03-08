@@ -11,12 +11,10 @@ public class PlayerObject : MonoBehaviour
     void Start()
     {
         _rigid = this.GetComponent<Rigidbody2D>();
-        if(DataManager.instance.isLoad) {
-            transform.position = new Vector3(DataManager.instance.nowPlayer.PlayerPosX, DataManager.instance.nowPlayer.PlayerPosY, 0);
-            Debug.Log(DataManager.instance.nowPlayer.PlayerPosX);
+        if(Manager.Data.getIsLoad()) {
+            transform.position = new Vector3(Manager.Data.nowPlayer.PlayerPosX, Manager.Data.nowPlayer.PlayerPosY, 0);
         } else {
             Debug.Log("Load fail");
-            Debug.Log(DataManager.instance.nowPlayer.PlayerPosX);
         }
     }
 
