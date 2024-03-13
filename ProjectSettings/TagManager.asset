@@ -8,6 +8,8 @@ TagManager:
   - Wall
   - Item
   - Cotton
+  - ActionKey
+  - Map
   layers:
   - Default
   - TransparentFX
