@@ -5,29 +5,30 @@ using UnityEngine;
 public class MapShadow : MonoBehaviour
 {
     [SerializeField]
-    private GameObject Canvas1F;
-    [SerializeField]
-    private GameObject Canvas2F;
+    private GameObject MapCanvas;
     [SerializeField]
     private GameObject Player;
 
-    private GameObject disabled_object;
+    private GameObject disabled_object = null;
 
     private void FixedUpdate() {
         this.transform.position = Player.transform.position;
     }
 
-    private void OnTriggerEnter2D(Collider2D col) {
+        /**
+            TODO Coroutine으로 구현, 딜레이 추가
+        **/
+    private void OnTriggerStay2D(Collider2D col) {
         if(col.gameObject.tag == "Map") {
-            if(col.gameObject.name == "Stairs") {
+            if(col.gameObject.name == "Stairs" || (disabled_object && disabled_object.name == col.gameObject.name)) {
                 return;
             } else {
                 if(disabled_object) {
                     disabled_object.SetActive(true);
                 }
 
-                disabled_object = Canvas1F.transform.Find(col.gameObject.name).gameObject;
-                Canvas1F.transform.Find(col.gameObject.name).gameObject.SetActive(false);
+                disabled_object = MapCanvas.transform.Find(col.gameObject.name).gameObject;
+                MapCanvas.transform.Find(col.gameObject.name).gameObject.SetActive(false);
             }
         }
     }
