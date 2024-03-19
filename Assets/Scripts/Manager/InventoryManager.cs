@@ -3,16 +3,35 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+public class Item
+{
+    public string itemName;
+    public string itemTag;
+    public GameObject item;
+
+    public Item()
+    {
+    }
+
+    // 생성자
+    public Item(string itemName, string itemTag, GameObject item)
+    {
+        this.itemName = itemName;
+        this.itemTag = itemTag;
+        this.item = item;
+    }
+}
+
 // 인벤토리 클래스
 class Inventory
 {
     public int num = 0; // 현재 인벤토리 아이템 	
     public int size = 1;    // 인벤토리 최대 크기
-    public GameObject[] itemSlot;   // 인벤토리 아이템 슬롯
+    public Item[] itemSlot;   // 인벤토리 아이템 슬롯
 
     public Inventory()
     {
-        itemSlot = new GameObject[size];    // size의 크기로 인벤토리 슬롯 생	
+        itemSlot = new Item[size];    // size의 크기로 인벤토리 슬롯 생	
     }
 }
 
@@ -28,14 +47,15 @@ public class InventoryManager
     // 아이템을 인벤토리에 저장
     public void putItem(GameObject item)
     {
-        inventory.itemSlot[inventory.num] = item;
+        Item itemInfo = new Item(item.name, item.tag, item);
+        inventory.itemSlot[inventory.num] = itemInfo;
         inventory.num++;
     }
 
     // 인덱스로 조회한 아이템 pop
-    public GameObject popItem(int index = 0)
+    public Item popItem(int index = 0)
     {
-        GameObject item;
+        Item item;
 
         if (index < 0 || index >= inventory.size)
         {
@@ -63,13 +83,13 @@ public class InventoryManager
     }
 
     // 인벤토리에서 솜을 탐색하고 발견 시, 해당 오브젝트를 pop하여 반환
-    public GameObject getCotton()
+    public Item getCotton()
     {
         int targetIndex;
 
         for (targetIndex = inventory.num - 1; targetIndex >= 0; targetIndex--)
         {
-            if (inventory.itemSlot[targetIndex].tag == "Cotton")
+            if (inventory.itemSlot[targetIndex].itemTag == "Cotton")
             {
                 return popItem(targetIndex);
             }
@@ -98,7 +118,7 @@ public class InventoryManager
         if (inventory.num != 0)
         {
             for (int i = 0; i < inventory.num; i++)
-                Debug.Log($"{inventory.itemSlot[i].name} is in Inventory");
+                Debug.Log($"Name: {inventory.itemSlot[i].itemName} / Tag: {inventory.itemSlot[i].itemTag}");
         }
         else
             Debug.Log("Inventory is Empty!");
