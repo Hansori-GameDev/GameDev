@@ -74,13 +74,13 @@ public class UIManager
         if (collidedObject.tag == "Doll")
         {
             // 인벤토리에서 솜 존재 여부 탐색
-            GameObject item = Manager.Inventory.getCotton();
+            Item cotton = Manager.Inventory.getCotton();
 
             // 만약 솜이 인벤토리 상에 있다면
-            if (item)
+            if (cotton != null)
             {
                 Debug.Log("Try to put Cotton in Doll");
-                Manager.Interaction.PutCottonInDoll(collidedObject, item);  // 솜을 인형에 넣음
+                Manager.Interaction.PutCottonInDoll(collidedObject, cotton.item);  // 솜을 인형에 넣음
             }
             // 만약 솜이 인벤토리 상에 없다면
             else
