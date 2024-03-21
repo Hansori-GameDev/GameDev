@@ -13,6 +13,7 @@ public class Menu : MonoBehaviour, IPointerClickHandler
         isMenuActive = !isMenuActive;
         menuSet.SetActive(isMenuActive);
 
-
+        Time.timeScale = isMenuActive ? 0f : 1f;
+        Debug.Log($"{isMenuActive}, {Time.timeScale}");
     }
 }
