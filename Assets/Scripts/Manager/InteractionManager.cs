@@ -34,4 +34,12 @@ public class InteractionManager
     public void WarpPlayerToOtherFloor(GameObject player, Vector3 pos) {
         player.transform.position = pos;
     }
+
+    public int GetCurrentFloor(GameObject player)
+    {
+        if (player.transform.position.x > 90)
+            return 1;
+        else
+            return 2;
+    }
 }
