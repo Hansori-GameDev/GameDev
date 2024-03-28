@@ -4,26 +4,25 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
-    public string enemyName;
-    public float atkSpeed;
-    public float moveSpeed;
-    public float atkRange;
+    [SerializeField] string enemyName;
+    [SerializeField] float moveSpeed;
+    [SerializeField] float atkRange;
     public float fieldOfVision;
 
     public GameObject canvas;
     public float height = 1.7f;
 
-    [SerializeField] public bool DebugMode = false;
-    [Range(0f, 360f)] [SerializeField] public float ViewAngle = 0f;
-    [SerializeField] public float ViewRadius = 1f;
-    [SerializeField] public LayerMask TargetMask;
-    [SerializeField] public LayerMask ObstacleMask;
+    [SerializeField] bool DebugMode = false;
+    [Range(0f, 360f)] [SerializeField] float ViewAngle = 0f;
+    [SerializeField] float ViewRadius = 1f;
+    [SerializeField] LayerMask TargetMask;
+    [SerializeField] LayerMask ObstacleMask;
 
     public List<Collider2D> hitTargetList = new List<Collider2D>();
 
     private Transform player;
 
-    public Transform[] waypoints;
+    [SerializeField] Transform[] waypoints;
     private int currentWaypointIndex = 0;
 
     public Animator monsterAnimator;
@@ -56,6 +55,10 @@ public class Monster : MonoBehaviour
 
     void Update()
     {
+        /**
+            위치찾아 이동 -> 플레이어 발견 -> 일정시간 따라가기 -> 플레이어가 범위를 벗어남 -> 반복
+            coroutine : 따라가기
+        **/
         float distance = Vector3.Distance(transform.position, player.position);
 
         if (FindPlayer())
@@ -73,7 +76,6 @@ public class Monster : MonoBehaviour
         }
         else
         {
-            // �÷��̾ �þ� �ۿ� �ְų� ���� ���� ���� ����
             MoveToWaypoint();
         }
     }
@@ -91,8 +93,6 @@ public class Monster : MonoBehaviour
         float radian = angle * Mathf.Deg2Rad;
         return new Vector2(Mathf.Sin(radian), Mathf.Cos(radian));
     }
-
-    
 
     void AttackPlayer()
     {
