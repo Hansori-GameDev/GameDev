@@ -8,6 +8,7 @@ public class MenuButtons : MonoBehaviour
 {
     public GameObject menuSet;
     public GameObject quitCheckUI;
+    public GameObject settingUI;
 
     private void Start()
     {
@@ -20,9 +21,9 @@ public class MenuButtons : MonoBehaviour
         // Button saveButton = GameObject.Find("SaveButton").GetComponent<Button>();
         // saveButton.onClick.AddListener(SaveClicked);
 
-        // // Setting 버튼에 대한 클릭 이벤트 처리
-        // Button settingButton = GameObject.Find("SettingButton").GetComponent<Button>();
-        // settingButton.onClick.AddListener(SettingClicked);
+        // Setting 버튼에 대한 클릭 이벤트 처리
+        Button settingButton = GameObject.Find("SettingButton").GetComponent<Button>();
+        settingButton.onClick.AddListener(SettingClicked);
 
         // Quit 버튼에 대한 클릭 이벤트 처리
         Button quitButton = GameObject.Find("QuitButton").GetComponent<Button>();
@@ -37,6 +38,25 @@ public class MenuButtons : MonoBehaviour
     {
         menuSet.SetActive(false);
         Time.timeScale = 1f;
+    }
+
+    // Setting 버튼 클릭 시 동작
+    void SettingClicked()
+    {
+        // 종료 확인 UI를 활성화
+        settingUI.SetActive(true);
+        menuSet.SetActive(false);
+
+        // Setting UI의 확인 버튼에 대한 클릭 이벤트 처리
+        Button settingConfirmBtn = GameObject.Find("SettingConfirmButton").GetComponent<Button>();
+        if (settingConfirmBtn != null)
+            settingConfirmBtn.onClick.AddListener(SettingConfirmClicked);   
+    }
+
+    void SettingConfirmClicked()
+    {
+        settingUI.SetActive(false);
+        menuSet.SetActive(true);
     }
 
     // Quit 버튼 클릭 시 동작
