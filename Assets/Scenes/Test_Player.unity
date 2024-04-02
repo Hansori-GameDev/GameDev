@@ -499,7 +499,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 472879944}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.97, y: -0.47, z: 0}
+  m_LocalPosition: {x: 3.7, y: -0.45, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1362,16 +1362,16 @@ MonoBehaviour:
   ViewAngle: 65
   ViewRadius: 5
   TargetMask:
-    serializedVersion: 2
     m_Bits: 1
   ObstacleMask:
-    serializedVersion: 2
     m_Bits: 1
   hitTargetList: []
+  player: {fileID: 0}
   waypoints:
   - {fileID: 1032000097}
   - {fileID: 12439605}
   - {fileID: 1422127764}
+  currentWaypointIndex: 0
   monsterAnimator: {fileID: 0}
   chaseTime: 0
 --- !u!60 &2114803306
@@ -1435,11 +1435,11 @@ MonoBehaviour:
   - {fileID: 1422127764}
   monsterAnimator: {fileID: 0}
   chaseTime: 0
-  gridSize: 0.5
+  gridSize: 1
   speed: 0.05
   obstacles:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   searchShortcut: 0
   snapToGrid: 0
   drawDebugLines: 0

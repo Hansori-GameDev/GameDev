@@ -47,6 +47,9 @@ public class Monster_pathfinding : MonoBehaviour
     List <Vector2> path;
     List<Vector2> pathLeftToGo= new List<Vector2>();
     [SerializeField] bool drawDebugLines;
+    /******************
+    * For Pathfinding *
+    ******************/
 
 
     void Start()
@@ -77,21 +80,25 @@ public class Monster_pathfinding : MonoBehaviour
         atkRange = _atkRange;
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        /**
-            위치찾아 이동 -> 플레이어 발견 -> 일정시간 따라가기 -> 플레이어가 범위를 벗어남 -> 반복
-            coroutine : 따라가기
-            변수 하나를 정해서 따라가는 시간으로 설정
-        **/
-        float distance = Vector3.Distance(transform.position, player.position);
-
         FindPlayer();
 
         if(chaseTime > 0) {
             ChasePlayer();
         } else {
             MoveToWaypoint();
+        }
+
+        if (pathLeftToGo.Count > 0) //if the target is not yet reached
+        {
+            Vector3 dir =  (Vector3)pathLeftToGo[0]-transform.position ;
+            transform.position += dir.normalized * speed;
+            if (((Vector2)transform.position - pathLeftToGo[0]).sqrMagnitude <speed*speed) 
+            {
+                transform.position = pathLeftToGo[0];
+                pathLeftToGo.RemoveAt(0);
+            }
         }
     }
 
@@ -110,8 +117,6 @@ public class Monster_pathfinding : MonoBehaviour
 
     void AttackPlayer()
     {
-        // player.GetComponent<Sword_Man>().nowHp -= enemy.atkDmg;
-        // monsterAnimator.SetTrigger("attack"); // ���� �ִϸ��̼� ����
         
     }
 
@@ -127,12 +132,22 @@ public class Monster_pathfinding : MonoBehaviour
         Transform targetWaypoint = waypoints[currentWaypointIndex];
 
         MonsterTurn(targetWaypoint.position);
-        transform.position = Vector2.MoveTowards(transform.position, targetWaypoint.position, moveSpeed * Time.deltaTime);
+        GetMoveCommand(new Vector2(targetWaypoint.position.x, targetWaypoint.position.y));
 
         if (Vector2.Distance(transform.position, targetWaypoint.position) < 0.1f)
         {
             currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
         }
+
+        // Transform targetWaypoint = waypoints[currentWaypointIndex];
+
+        // MonsterTurn(targetWaypoint.position);
+        // transform.position = Vector2.MoveTowards(transform.position, targetWaypoint.position, moveSpeed * Time.fixedDeltaTime);
+
+        // if (Vector2.Distance(transform.position, targetWaypoint.position) < 0.1f)
+        // {
+        //     currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
+        // }
     }
 
     void FindPlayer()
@@ -145,73 +160,42 @@ public class Monster_pathfinding : MonoBehaviour
 
     void ChasePlayer()
     {
-        Debug.Log(player.position);
         if(chaseTime >= 0f) {
-            Debug.Log(Camera.main.ScreenToWorldPoint(player.position));
-            // Vector3 dir = player.position - transform.position;
-            // MonsterTurn(player.position);
-            // transform.Translate(dir.normalized * moveSpeed * Time.deltaTime, Space.World);
-            // chaseTime -= Time.deltaTime;
+            MonsterTurn(player.position);
+            GetMoveCommand(new Vector2(player.position.x, player.position.y));
+            chaseTime -= Time.fixedDeltaTime;
         }
     }
 
     void FindTargets() {
-
         hitTargetList.Clear();
         Collider2D[] Targets = Physics2D.OverlapCircleAll(transform.position, ViewRadius, TargetMask);
-       
-        Debug.Log(Targets.Length);
 
         if (Targets.Length == 0) return;
 
         foreach(Collider2D col in Targets) {
-            if(col.name == "wall") {
-                Debug.Log("wall");
+            if(col.tag == "Wall") {
                 continue;
             }
 
             Vector3 targetPos = col.transform.position;
             Vector3 targetDir = (targetPos - transform.position).normalized;
+            float targetAngle = Mathf.Acos(Vector3.Dot(transform.up, targetDir)) * Mathf.Rad2Deg;
 
-            RaycastHit2D rayHitedTarget = Physics2D.Raycast(transform.position, targetDir, ViewRadius, ObstacleMask);
+            RaycastHit2D rayHitedTarget = Physics2D.Raycast(transform.position, targetDir, ViewRadius, TargetMask, 0, ViewRadius);
 
-            if(rayHitedTarget) {
-                Debug.DrawLine(transform.position, rayHitedTarget.point, Color.yellow);
-            } else {
-                
-                float targetAngle = Mathf.Acos(Vector3.Dot(transform.up, targetDir)) * Mathf.Rad2Deg;
-                if(targetAngle <= ViewAngle * 0.5f && !Physics2D.Raycast(transform.position, targetDir, ViewRadius, 0, ViewRadius))
+            if(rayHitedTarget && rayHitedTarget.collider.name == "Player") {
+                if(targetAngle <= ViewAngle * 0.5)
                 {
                     hitTargetList.Add(col);
                     if (DebugMode) {
                         Debug.DrawLine(transform.position, targetPos, Color.red);
                     }
-                    /** 플레이어 따라가는 함수 **/
                 }
+            } else {
+                Debug.DrawLine(transform.position, rayHitedTarget.point, Color.yellow);
             }           
         }
-
-        // hitTargetList.Clear();
-        // Collider2D[] Targets = Physics2D.OverlapCircleAll(transform.position, ViewRadius, ObstacleMask);
-
-        // if (Targets.Length == 0) return;
-
-        // foreach(Collider2D col in Targets) {
-        //     if(col.name == "wall") {
-        //         continue;
-        //     }
-        //     Vector3 targetPos = col.transform.position;
-        //     Vector3 targetDir = (targetPos - transform.position).normalized;
-        //     float targetAngle = Mathf.Acos(Vector3.Dot(transform.up, targetDir)) * Mathf.Rad2Deg;
-        //     if(targetAngle <= ViewAngle * 0.5f && !Physics2D.Raycast(transform.position, targetDir, ViewRadius, 0, ViewRadius))
-        //     {
-        //         hitTargetList.Add(col);
-        //         if (DebugMode) {
-        //             Debug.DrawLine(transform.position, targetPos, Color.red);
-        //         }
-        //         /** 플레이어 따라가는 함수 **/
-        //     }
-        // }
     }
 
     void OnDrawGizmos() {
@@ -229,41 +213,14 @@ public class Monster_pathfinding : MonoBehaviour
         Debug.DrawRay(transform.position, leftDir * ViewRadius, Color.blue);
         Debug.DrawRay(transform.position, lookDir * ViewRadius, Color.cyan);
 
-        hitTargetList.Clear();
-        Collider2D[] Targets = Physics2D.OverlapCircleAll(transform.position, ViewRadius, TargetMask);
-
-        if (Targets.Length == 0) return;
-
-        foreach(Collider2D col in Targets) {
-            if(col.tag == "Wall") {
-                Debug.Log("wall return");
-                continue;
-            }
-
-            Vector3 targetPos = col.transform.position;
-            Vector3 targetDir = (targetPos - transform.position).normalized;
-            float targetAngle = Mathf.Acos(Vector3.Dot(transform.up, targetDir)) * Mathf.Rad2Deg;
-
-            RaycastHit2D rayHitedTarget = Physics2D.Raycast(transform.position, targetDir, ViewRadius, TargetMask, 0, ViewRadius);
-
-            Debug.Log(rayHitedTarget.point);
-
-            if(rayHitedTarget && rayHitedTarget.collider.name == "Player") {
-                if(targetAngle <= ViewAngle * 0.5)
-                {
-                    hitTargetList.Add(col);
-                    if (DebugMode) {
-                        Debug.DrawLine(transform.position, targetPos, Color.red);
-                    }
-                }
-            } else {
-                Debug.DrawLine(transform.position, rayHitedTarget.point, Color.yellow);
-            }           
-        }
+        FindTargets();
     }
 
-
     
+    /******************
+    * For Pathfinding *
+    ******************/
+
     void GetMoveCommand(Vector2 target)
     {
         Vector2 closestNode = GetClosestNode(transform.position);
@@ -280,11 +237,6 @@ public class Monster_pathfinding : MonoBehaviour
         }
         
     }
-
-
-    /******************
-    * For Pathfinding *
-    ******************/
 
     /// <summary>
     /// Finds closest point on the grid
