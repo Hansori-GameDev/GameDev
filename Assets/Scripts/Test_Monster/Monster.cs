@@ -7,7 +7,6 @@ public class Monster : MonoBehaviour
     [SerializeField] string enemyName;
     [SerializeField] float moveSpeed;
     [SerializeField] float atkRange;
-    public float fieldOfVision;
 
     public GameObject canvas;
     public float height = 1.7f;
@@ -31,7 +30,7 @@ public class Monster : MonoBehaviour
     {
         if (name.Equals("Monster1"))
         {
-            SetEnemyStatus("Monster1", 1.5f, 1.5f, 7f);
+            SetEnemyStatus("Monster1", 1.5f, 1.5f);
         }
 
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
@@ -45,12 +44,11 @@ public class Monster : MonoBehaviour
         }
     }
 
-    private void SetEnemyStatus(string _enemyName, float _moveSpeed, float _atkRange, float _fieldOfVision)
+    private void SetEnemyStatus(string _enemyName, float _moveSpeed, float _atkRange)
     {
         enemyName = _enemyName;
         moveSpeed = _moveSpeed;
         atkRange = _atkRange;
-        fieldOfVision = _fieldOfVision;
     }
 
     void Update()
@@ -58,6 +56,7 @@ public class Monster : MonoBehaviour
         /**
             위치찾아 이동 -> 플레이어 발견 -> 일정시간 따라가기 -> 플레이어가 범위를 벗어남 -> 반복
             coroutine : 따라가기
+            변수 하나를 정해서 따라가는 시간으로 설정
         **/
         float distance = Vector3.Distance(transform.position, player.position);
 
