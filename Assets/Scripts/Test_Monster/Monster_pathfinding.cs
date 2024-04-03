@@ -92,7 +92,9 @@ public class Monster_pathfinding : MonoBehaviour
 
         if (pathLeftToGo.Count > 0) //if the target is not yet reached
         {
+            
             Vector3 dir =  (Vector3)pathLeftToGo[0]-transform.position ;
+            MonsterTurn((Vector3)pathLeftToGo[0]);
             transform.position += dir.normalized * speed;
             if (((Vector2)transform.position - pathLeftToGo[0]).sqrMagnitude <speed*speed) 
             {
@@ -131,7 +133,6 @@ public class Monster_pathfinding : MonoBehaviour
     {
         Transform targetWaypoint = waypoints[currentWaypointIndex];
 
-        MonsterTurn(targetWaypoint.position);
         GetMoveCommand(new Vector2(targetWaypoint.position.x, targetWaypoint.position.y));
 
         if (Vector2.Distance(transform.position, targetWaypoint.position) < 0.1f)
@@ -141,7 +142,6 @@ public class Monster_pathfinding : MonoBehaviour
 
         // Transform targetWaypoint = waypoints[currentWaypointIndex];
 
-        // MonsterTurn(targetWaypoint.position);
         // transform.position = Vector2.MoveTowards(transform.position, targetWaypoint.position, moveSpeed * Time.fixedDeltaTime);
 
         // if (Vector2.Distance(transform.position, targetWaypoint.position) < 0.1f)
@@ -161,7 +161,6 @@ public class Monster_pathfinding : MonoBehaviour
     void ChasePlayer()
     {
         if(chaseTime >= 0f) {
-            MonsterTurn(player.position);
             GetMoveCommand(new Vector2(player.position.x, player.position.y));
             chaseTime -= Time.fixedDeltaTime;
         }
@@ -284,7 +283,6 @@ public class Monster_pathfinding : MonoBehaviour
         return neighbours;
     }
 
-    
     List<Vector2> ShortenPath(List<Vector2> path)
     {
         List<Vector2> newPath = new List<Vector2>();
