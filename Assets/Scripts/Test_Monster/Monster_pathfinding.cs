@@ -7,12 +7,7 @@ public class Monster_pathfinding : MonoBehaviour
 {
     [SerializeField] string enemyName;
     [SerializeField] float moveSpeed;
-    [SerializeField] float atkRange;
-
-    public GameObject canvas;
-    public float height = 1.7f;
-
-    [SerializeField] bool DebugMode = false;
+    [SerializeField] bool DebugMode = true;
     [Range(0f, 360f)] [SerializeField] float ViewAngle = 0f;
     [SerializeField] float ViewRadius = 1f;
     [SerializeField] LayerMask TargetMask;
@@ -33,7 +28,7 @@ public class Monster_pathfinding : MonoBehaviour
     * For Pathfinding *
     ******************/
     [Header("Navigator options")]
-    [SerializeField] float gridSize = 0.5f; //increase patience or gridSize for larger maps
+    [SerializeField] float gridSize = 0.9f; //increase patience or gridSize for larger maps
     [SerializeField] float speed = 0.05f; //increase for faster movement
     
     Pathfinder<Vector2> pathfinder; //the pathfinder object that stores the methods and patience
@@ -56,7 +51,7 @@ public class Monster_pathfinding : MonoBehaviour
     {
         if (name.Equals("Monster1"))
         {
-            SetEnemyStatus("Monster1", 1.5f, 1.5f);
+            InitStatus("Monster1", 65f, 5f);
         }
 
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
@@ -73,53 +68,35 @@ public class Monster_pathfinding : MonoBehaviour
         pathfinder = new Pathfinder<Vector2>(GetDistance,GetNeighbourNodes,1000);
     }
 
-    private void SetEnemyStatus(string _enemyName, float _moveSpeed, float _atkRange)
-    {
-        enemyName = _enemyName;
-        moveSpeed = _moveSpeed;
-        atkRange = _atkRange;
-    }
-
     void FixedUpdate()
     {
-        FindPlayer();
-
         if(chaseTime > 0) {
             ChasePlayer();
         } else {
             MoveToWaypoint();
         }
+    }
 
-        if (pathLeftToGo.Count > 0) //if the target is not yet reached
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.tag == "Player")
         {
-            
-            Vector3 dir =  (Vector3)pathLeftToGo[0]-transform.position ;
-            MonsterTurn((Vector3)pathLeftToGo[0]);
-            transform.position += dir.normalized * speed;
-            if (((Vector2)transform.position - pathLeftToGo[0]).sqrMagnitude <speed*speed) 
-            {
-                transform.position = pathLeftToGo[0];
-                pathLeftToGo.RemoveAt(0);
-            }
+            Debug.Log("Game Over!");
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D col)
+    private void InitStatus(string _enemyName, float _ViewAngle, float _ViewRadius)
     {
-        if (col.CompareTag("Player"))
-        {
-            // 게임종료
-        }
+        enemyName = _enemyName;
+        ViewAngle = _ViewAngle;
+        ViewRadius = _ViewRadius;
+        TargetMask = LayerMask.GetMask("Default");
+        ObstacleMask = LayerMask.GetMask("Ignore Raycast");
     }
 
     Vector2 AngleToDir(float angle) {
         float radian = angle * Mathf.Deg2Rad;
         return new Vector2(Mathf.Sin(radian), Mathf.Cos(radian));
-    }
-
-    void AttackPlayer()
-    {
-        
     }
 
     void MonsterTurn(Vector3 targetPosition) {
@@ -133,7 +110,7 @@ public class Monster_pathfinding : MonoBehaviour
     {
         Transform targetWaypoint = waypoints[currentWaypointIndex];
 
-        GetMoveCommand(new Vector2(targetWaypoint.position.x, targetWaypoint.position.y));
+        MonsterMove(targetWaypoint.position);
 
         if (Vector2.Distance(transform.position, targetWaypoint.position) < 0.1f)
         {
@@ -150,18 +127,10 @@ public class Monster_pathfinding : MonoBehaviour
         // }
     }
 
-    void FindPlayer()
-    {
-        if (hitTargetList.Count != 0)
-        {
-            chaseTime = 5f;
-        }
-    }
-
     void ChasePlayer()
     {
         if(chaseTime >= 0f) {
-            GetMoveCommand(new Vector2(player.position.x, player.position.y));
+            MonsterMove(player.position);
             chaseTime -= Time.fixedDeltaTime;
         }
     }
@@ -186,13 +155,17 @@ public class Monster_pathfinding : MonoBehaviour
             if(rayHitedTarget && rayHitedTarget.collider.name == "Player") {
                 if(targetAngle <= ViewAngle * 0.5)
                 {
+                    // Find Player
                     hitTargetList.Add(col);
+                    chaseTime = 5f;
                     if (DebugMode) {
                         Debug.DrawLine(transform.position, targetPos, Color.red);
                     }
                 }
             } else {
-                Debug.DrawLine(transform.position, rayHitedTarget.point, Color.yellow);
+                if(DebugMode) {
+                    Debug.DrawLine(transform.position, rayHitedTarget.point, Color.yellow);
+                }
             }           
         }
     }
@@ -219,6 +192,21 @@ public class Monster_pathfinding : MonoBehaviour
     /******************
     * For Pathfinding *
     ******************/
+    void MonsterMove(Vector3 target) {
+        GetMoveCommand(new Vector2(target.x, target.y));
+        if (pathLeftToGo.Count > 0) //if the target is not yet reached
+        {
+            
+            Vector3 dir =  (Vector3)pathLeftToGo[0]-transform.position ;
+            MonsterTurn((Vector3)pathLeftToGo[0]);
+            transform.position += dir.normalized * speed;
+            if (((Vector2)transform.position - pathLeftToGo[0]).sqrMagnitude <speed*speed) 
+            {
+                transform.position = pathLeftToGo[0];
+                pathLeftToGo.RemoveAt(0);
+            }
+        }
+    }
 
     void GetMoveCommand(Vector2 target)
     {

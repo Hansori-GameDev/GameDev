@@ -1230,8 +1230,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2114803304}
   - component: {fileID: 2114803303}
-  - component: {fileID: 2114803301}
-  - component: {fileID: 2114803305}
   - component: {fileID: 2114803307}
   - component: {fileID: 2114803306}
   m_Layer: 2
@@ -1241,39 +1239,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2114803301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2114803300}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9ad6d8ec97ffb44b9ecad197562f6bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyName: Monster1
-  moveSpeed: 5
-  atkRange: 0
-  canvas: {fileID: 0}
-  height: 1.7
-  DebugMode: 0
-  ViewAngle: 65
-  ViewRadius: 5
-  TargetMask:
-    serializedVersion: 2
-    m_Bits: 1
-  ObstacleMask:
-    serializedVersion: 2
-    m_Bits: 0
-  hitTargetList:
-  - {fileID: 1467252147}
-  waypoints:
-  - {fileID: 1032000097}
-  - {fileID: 12439605}
-  - {fileID: 1422127764}
-  monsterAnimator: {fileID: 0}
 --- !u!212 &2114803303
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1334,46 +1299,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2114803300}
   m_LocalRotation: {x: -0, y: -0, z: 0.45733678, w: 0.8892936}
-  m_LocalPosition: {x: 8.62, y: -2, z: 0}
+  m_LocalPosition: {x: 13.62, y: -0.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 54.431}
---- !u!114 &2114803305
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2114803300}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fdd68a905e32494095e20a0c8e5e430, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyName: 
-  moveSpeed: 0
-  atkRange: 0
-  canvas: {fileID: 0}
-  height: 1.7
-  DebugMode: 0
-  ViewAngle: 65
-  ViewRadius: 5
-  TargetMask:
-    m_Bits: 1
-  ObstacleMask:
-    m_Bits: 1
-  hitTargetList: []
-  player: {fileID: 0}
-  waypoints:
-  - {fileID: 1032000097}
-  - {fileID: 12439605}
-  - {fileID: 1422127764}
-  currentWaypointIndex: 0
-  monsterAnimator: {fileID: 0}
-  chaseTime: 0
 --- !u!60 &2114803306
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -1416,9 +1348,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Monster1
   moveSpeed: 5
-  atkRange: 0
-  canvas: {fileID: 0}
-  height: 1.7
   DebugMode: 1
   ViewAngle: 65
   ViewRadius: 5
