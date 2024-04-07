@@ -23,10 +23,22 @@ public class DataManager : MonoBehaviour
     private bool isLoad = false;
 
     /***
-        DataManager.Instance.SaveData()
+        Manager.Data.SaveData()
         데이터 저장
     ***/
     public void SaveData() {
+        
+        /**************************
+        * TODO : 저장할 데이터 추가 *
+        ****************************/
+
+        GameObject savePlayer = GameObject.Find("Player");
+        
+        Debug.Log("Save Player" + savePlayer.transform.position.x.ToString() + savePlayer.transform.position.y.ToString());
+
+        nowPlayer.PlayerPosX = savePlayer.transform.position.x;
+        nowPlayer.PlayerPosY = savePlayer.transform.position.y;
+
         string data = JsonUtility.ToJson(nowPlayer);
 
         File.WriteAllText(data_path + filename, data);
@@ -34,7 +46,7 @@ public class DataManager : MonoBehaviour
     }
 
     /***
-        DataManager.Instance.LoadData()
+        Manager.Data.LoadData()
         데이터 불러오기
     ***/
     public void LoadData() {

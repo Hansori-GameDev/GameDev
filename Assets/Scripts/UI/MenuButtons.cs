@@ -18,8 +18,8 @@ public class MenuButtons : MonoBehaviour
             playButton.onClick.AddListener(PlayClicked);
 
         // // Save 버튼에 대한 클릭 이벤트 처리
-        // Button saveButton = GameObject.Find("SaveButton").GetComponent<Button>();
-        // saveButton.onClick.AddListener(SaveClicked);
+        Button saveButton = GameObject.Find("SaveButton").GetComponent<Button>();
+        saveButton.onClick.AddListener(SaveClicked);
 
         // Setting 버튼에 대한 클릭 이벤트 처리
         Button settingButton = GameObject.Find("SettingButton").GetComponent<Button>();
@@ -38,6 +38,16 @@ public class MenuButtons : MonoBehaviour
     {
         menuSet.SetActive(false);
         Time.timeScale = 1f;
+    }
+
+    // Save 버튼 클릭 시 동작
+    void SaveClicked()
+    {
+        /*****************************
+        * TODO : 저장 안내 메시지 표시 *
+        ******************************/
+
+        Manager.Data.SaveData();
     }
 
     // Setting 버튼 클릭 시 동작
