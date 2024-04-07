@@ -11,6 +11,7 @@ public class UIManager
     // 인벤토리 위치
     Transform inventoryPos;
 
+
     // 인벤토리 위치 Setter
     public void SetInventoryPos(Transform location)
     {
