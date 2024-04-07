@@ -14,6 +14,8 @@ public class PlayerDied : MonoBehaviour
 
     void Start()
     {
+        blackPanel.gameObject.SetActive(false);
+
         // 시작 시에는 사망 텍스트와 검은색 패널을 숨김
         deathText.color = Color.clear;
         blackPanel.color = Color.clear;
@@ -37,6 +39,7 @@ public class PlayerDied : MonoBehaviour
         isPlayerDead = true;            // 사망 여부 플래그 갱신
         deathText.text = "Game Over";   // 사망 메세지 텍스트
         deathText.color = Color.red;    // 사망 메세지 색상
+        blackPanel.gameObject.SetActive(true);
         StartCoroutine(FadeDeathText());
         
         // 플레이어를 움직이지 못하도록 MovementObject의 메소드를 호출하여 제한
