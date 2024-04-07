@@ -3,38 +3,49 @@ using System.Collections.Generic;
 using UnityEngine;
 using Aoiti.Pathfinding;
 
-public class Monster_pathfinding : MonoBehaviour
+public class Monster_refactor : MonoBehaviour
 {
     [SerializeField] string enemyName;
-    [SerializeField] bool DebugMode = true;
+    [SerializeField] float moveSpeed;
+    [SerializeField] float atkRange;
+
+    public GameObject canvas;
+    public float height = 1.7f;
+
+    [SerializeField] bool DebugMode = false;
     [Range(0f, 360f)] [SerializeField] float ViewAngle = 0f;
     [SerializeField] float ViewRadius = 1f;
     [SerializeField] LayerMask TargetMask;
     [SerializeField] LayerMask ObstacleMask;
 
-    List<Collider2D> hitTargetList = new List<Collider2D>();
-    private GameObject player;
+    public List<Collider2D> hitTargetList = new List<Collider2D>();
 
-    [SerializeField] Transform waypoints;
+    private Transform player;
+
+    [SerializeField] Transform[] waypoints;
     private int currentWaypointIndex = 0;
 
-    float chaseTime;
-    bool isRunningCoroutine = false;
-    Vector3 targetPath;
+    public Animator monsterAnimator;
+
+    public float chaseTime;
 
     /******************
     * For Pathfinding *
     ******************/
     [Header("Navigator options")]
     [SerializeField] float gridSize = 0.9f; //increase patience or gridSize for larger maps
+    [SerializeField] float speed = 0.05f; //increase for faster movement
     
     Pathfinder<Vector2> pathfinder; //the pathfinder object that stores the methods and patience
     [Tooltip("The layers that the navigator can not pass through.")]
     [SerializeField] LayerMask obstacles;
-
+    [Tooltip("Deactivate to make the navigator move along the grid only, except at the end when it reaches to the target point. This shortens the path but costs extra Physics2D.LineCast")] 
+    [SerializeField] bool searchShortcut =false; 
+    [Tooltip("Deactivate to make the navigator to stop at the nearest point on the grid.")]
+    [SerializeField] bool snapToGrid =false; 
     Vector2 targetNode; //target in 2D space
     List <Vector2> path;
-    public List<Vector2> pathLeftToGo= new List<Vector2>();
+    List<Vector2> pathLeftToGo= new List<Vector2>();
     [SerializeField] bool drawDebugLines;
     /******************
     * For Pathfinding *
@@ -45,13 +56,13 @@ public class Monster_pathfinding : MonoBehaviour
     {
         if (name.Equals("Monster1"))
         {
-            InitStatus("Monster1", 65f, 5f);
+            InitStatus("Monster1", 1.5f, 1.5f);
         }
 
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         if (playerObject != null)
         {
-            player = playerObject;
+            player = playerObject.transform;
         }
         else
         {
@@ -59,44 +70,41 @@ public class Monster_pathfinding : MonoBehaviour
         }
 
         // Pathfinding
-        pathfinder = new Pathfinder<Vector2>(GetDistance,GetNeighbourNodes, 1000);
+        pathfinder = new Pathfinder<Vector2>(GetDistance,GetNeighbourNodes,1000);
     }
 
     void FixedUpdate()
     {
-
         if(chaseTime > 0) {
             ChasePlayer();
         } else {
             MoveToWaypoint();
         }
-
-        if(!isRunningCoroutine) {
-            StartCoroutine("addPath");
-        }
-        // MonsterMove();
     }
 
-    private void OnCollisionEnter2D(Collision2D col)
+    private void OnColliderEnter2D(Collider2D col)
     {
-        if (col.gameObject.tag == "Player")
+        if (col.CompareTag("Player"))
         {
-            Debug.Log("Game Over!");
+            // 게임종료
         }
     }
 
-    private void InitStatus(string _enemyName, float _ViewAngle, float _ViewRadius)
+    private void InitStatus(string _enemyName, float _moveSpeed, float _atkRange)
     {
         enemyName = _enemyName;
-        ViewAngle = _ViewAngle;
-        ViewRadius = _ViewRadius;
-        TargetMask = LayerMask.GetMask("Default");
-        ObstacleMask = LayerMask.GetMask("Ignore Raycast");
+        moveSpeed = _moveSpeed;
+        atkRange = _atkRange;
     }
 
     Vector2 AngleToDir(float angle) {
         float radian = angle * Mathf.Deg2Rad;
         return new Vector2(Mathf.Sin(radian), Mathf.Cos(radian));
+    }
+
+    void AttackPlayer()
+    {
+        
     }
 
     void MonsterTurn(Vector3 targetPosition) {
@@ -108,55 +116,65 @@ public class Monster_pathfinding : MonoBehaviour
 
     void MoveToWaypoint()
     {
-        Transform targetWaypoint = waypoints.GetChild(currentWaypointIndex);
+        Transform targetWaypoint = waypoints[currentWaypointIndex];
 
-        targetPath = targetWaypoint.position;
+        MonsterMove(targetWaypoint.position);
 
-        if (Vector2.Distance(transform.position, targetWaypoint.position) <= gridSize)
+        if (Vector2.Distance(transform.position, targetWaypoint.position) < 0.1f)
         {
-            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.childCount;
+            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
         }
+
+        // Transform targetWaypoint = waypoints[currentWaypointIndex];
+
+        // transform.position = Vector2.MoveTowards(transform.position, targetWaypoint.position, moveSpeed * Time.fixedDeltaTime);
+
+        // if (Vector2.Distance(transform.position, targetWaypoint.position) < 0.1f)
+        // {
+        //     currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
+        // }
     }
 
     void ChasePlayer()
     {
-        targetPath = player.transform.position;
-        chaseTime -= Time.fixedDeltaTime;
+        if(chaseTime >= 0f) {
+            MonsterMove(player.position);
+            chaseTime -= Time.fixedDeltaTime;
+        }
     }
 
     void FindTargets() {
         hitTargetList.Clear();
-
         Collider2D[] Targets = Physics2D.OverlapCircleAll(transform.position, ViewRadius, TargetMask);
 
         if (Targets.Length == 0) return;
 
         foreach(Collider2D col in Targets) {
-            if(col.tag != "Player") {
+            if(col.tag == "Wall") {
                 continue;
             }
 
             Vector3 targetPos = col.transform.position;
-            Vector3 targetDir = new Vector3((targetPos - transform.position).x, (targetPos - transform.position).y, 0).normalized;
+            Vector3 targetDir = (targetPos - transform.position).normalized;
             float targetAngle = Mathf.Acos(Vector3.Dot(transform.up, targetDir)) * Mathf.Rad2Deg;
 
-            RaycastHit2D rayHitedTarget = Physics2D.Raycast(transform.position, targetDir, ViewRadius, TargetMask, -5, 10);
+            RaycastHit2D rayHitedTarget = Physics2D.Raycast(transform.position, targetDir, ViewRadius, TargetMask, 0, ViewRadius);
 
-            if(targetAngle <= ViewAngle * 0.5)
-            {
-                if(rayHitedTarget && rayHitedTarget.collider.name == "Player") {
+            if(rayHitedTarget && rayHitedTarget.collider.name == "Player") {
+                if(targetAngle <= ViewAngle * 0.5)
+                {
                     // Find Player
                     hitTargetList.Add(col);
                     chaseTime = 5f;
                     if (DebugMode) {
                         Debug.DrawLine(transform.position, targetPos, Color.red);
                     }
-                } else {
-                    if(DebugMode) {
-                        Debug.DrawLine(transform.position, rayHitedTarget.point, Color.yellow);
-                    }
-                }        
-            }   
+                }
+            } else {
+                if(DebugMode) {
+                    Debug.DrawLine(transform.position, rayHitedTarget.point, Color.yellow);
+                }
+            }           
         }
     }
 
@@ -178,24 +196,41 @@ public class Monster_pathfinding : MonoBehaviour
         FindTargets();
     }
 
-    IEnumerator addPath() 
-    {
-        isRunningCoroutine = true;
-        GetMoveCommand(new Vector2(targetPath.x, targetPath.y));
-        yield return new WaitForSeconds(0.001f);
-        isRunningCoroutine = false;
-    }
     
     /******************
     * For Pathfinding *
     ******************/
+    void MonsterMove(Vector3 target) {
+        GetMoveCommand(new Vector2(target.x, target.y));
+        if (pathLeftToGo.Count > 0) //if the target is not yet reached
+        {
+            
+            Vector3 dir =  (Vector3)pathLeftToGo[0]-transform.position ;
+            MonsterTurn((Vector3)pathLeftToGo[0]);
+            transform.position += dir.normalized * speed;
+            if (((Vector2)transform.position - pathLeftToGo[0]).sqrMagnitude <speed*speed) 
+            {
+                transform.position = pathLeftToGo[0];
+                pathLeftToGo.RemoveAt(0);
+            }
+        }
+    }
+
     void GetMoveCommand(Vector2 target)
     {
         Vector2 closestNode = GetClosestNode(transform.position);
         if (pathfinder.GenerateAstarPath(closestNode, GetClosestNode(target), out path)) //Generate path between two points on grid that are close to the transform position and the assigned target.
         {
-            pathLeftToGo = new List<Vector2>(path);
+            if (searchShortcut && path.Count>0)
+                pathLeftToGo = ShortenPath(path);
+            else
+            {
+                pathLeftToGo = new List<Vector2>(path);
+                if (!snapToGrid) pathLeftToGo.Add(target);
+            }
+
         }
+        
     }
 
     /// <summary>
