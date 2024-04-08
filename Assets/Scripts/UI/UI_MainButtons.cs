@@ -7,12 +7,12 @@ public class UI_MainButtons : MonoBehaviour
 {
     
     public void onClickNewGame() {
-        SceneManager.LoadScene("Scene_0");
+        SceneManager.LoadScene("Scene_1");
     }
 
     public void onClickContinue() {
         Manager.Data.LoadData();
-        SceneManager.LoadScene("Scene_0");
+        SceneManager.LoadScene("Scene_1");
     }
 
     public void onClickExit() {
