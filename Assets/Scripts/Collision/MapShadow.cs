@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class MapShadow : MonoBehaviour
 {
+    public Timer testTimer;
     [SerializeField]
     private GameObject MapCanvas;
     [SerializeField]
     private GameObject Player;
 
     private GameObject disabled_object = null;
+
+    private void start() {
+        testTimer = GameObject.Find("EventSystem").GetComponent<Timer>();
+    }
 
     private void FixedUpdate() {
         this.transform.position = Player.transform.position;
@@ -30,6 +35,10 @@ public class MapShadow : MonoBehaviour
                 disabled_object = MapCanvas.transform.Find(col.gameObject.name).gameObject;
                 MapCanvas.transform.Find(col.gameObject.name).gameObject.SetActive(false);
             }
+        }
+
+        if(col.gameObject.name == "Timer") {
+            testTimer.startTimer();
         }
     }
 }

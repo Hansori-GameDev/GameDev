@@ -8,6 +8,7 @@ public class PlayerDied : MonoBehaviour
     public TMP_Text deathText;      // 사망 메세지
     public Image blackPanel;        // 검은색 패널
     public float fadeDuration = 2f; // 페이드 동작 시간
+    public Timer timer;
 
     bool isPlayerDead = false;      // 사망 여부 플래그 변수 
     MovementObject movementObject;
@@ -27,7 +28,7 @@ public class PlayerDied : MonoBehaviour
     void Update()
     {
         // 플레이어가 죽었을 때의 사망 시그널을 받아 처리 + 테스트를 위해 스페이스바를 누르면 사망하도록 임시로 구현
-        if (Input.GetKeyDown(KeyCode.Space) && !isPlayerDead)
+        if (Input.GetKeyDown(KeyCode.Space) && !isPlayerDead || timer._isGameOver)
         {
             PlayerDead();
         }
