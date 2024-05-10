@@ -29,12 +29,17 @@ public class Manager : MonoBehaviour
     DataManager _data = new DataManager();
     public static DataManager Data { get { return Instance._data; } }
 
+<<<<<<< Updated upstream
     SoundManager _sound = new SoundManager();
     public static SoundManager Sound { get { return Instance._sound; } }
 
     ResourceManager _resource = new ResourceManager();
     public static ResourceManager Resource { get { return Instance._resource; } }
 
+=======
+    AnimationManager _animation = new AnimationManager();
+    public static AnimationManager Animation { get { return Instance._animation; } }
+>>>>>>> Stashed changes
     void Awake() {
         _data.setDataPath(Application.persistentDataPath + "/");
     }
