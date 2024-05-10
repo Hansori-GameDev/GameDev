@@ -10,6 +10,7 @@ TagManager:
   - Cotton
   - ActionKey
   - Map
+  - MonsterArea
   layers:
   - Default
   - TransparentFX
