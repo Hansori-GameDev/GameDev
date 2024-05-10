@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class MovementObject : MonoBehaviour
 {
-    public enum PlayerDirection
-    {
-        Up, Right, Down, Left,
-    }
-    PlayerDirection _state = PlayerDirection.Down;
+    AnimStates.Direction _dir;
+    AnimStates.State _state;
 
     [SerializeField]
     private VirtualJoystick virtualJoystick;
@@ -65,6 +62,7 @@ public class MovementObject : MonoBehaviour
 
     void PlayerMove(Vector2 direction)
     {
+        _state = AnimStates.State.Walk;
         transform.Translate(direction * movespeed * Time.fixedDeltaTime);
         animspeed = Mathf.Sqrt(Mathf.Pow(direction.x, 2) + Mathf.Pow(direction.y, 2));
         anim.SetFloat("animspeed", animspeed);
@@ -72,21 +70,21 @@ public class MovementObject : MonoBehaviour
         float dir = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
         GetDirection(dir);
 
-        anim.Play($"Walk_{_state.ToString()}");
+        Manager.Animation.Play(anim, _state, _dir);
     }
 
     void GetDirection(float dir)
     {
-        if (dir <= 45.0 && dir >= -45.0) _state = PlayerDirection.Up;
-        else if (dir >= 45.0 && dir <= 135.0) _state = PlayerDirection.Right;
-        else if (dir <= -45.0 && dir >= -135.0) _state = PlayerDirection.Left;
-        else _state = PlayerDirection.Down;
+        if (dir <= 45.0 && dir >= -45.0) _dir = AnimStates.Direction.Up;
+        else if (dir >= 45.0 && dir <= 135.0) _dir = AnimStates.Direction.Right;
+        else if (dir <= -45.0 && dir >= -135.0) _dir = AnimStates.Direction.Left;
+        else _dir = AnimStates.Direction.Down;
     }
 
     void PlayerIdle()
     {
-        anim.SetBool("isMoving", false);
-        anim.Play($"Idle_{_state.ToString()}");
+        _state = AnimStates.State.Idle;
+        Manager.Animation.Play(anim, _state, _dir);
     }
 
     // 플레이어가 움직일 수 있는지 여부를 설정하는 메소드

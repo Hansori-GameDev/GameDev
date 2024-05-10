@@ -29,6 +29,14 @@ public class Manager : MonoBehaviour
     DataManager _data = new DataManager();
     public static DataManager Data { get { return Instance._data; } }
 
+    SoundManager _sound = new SoundManager();
+    public static SoundManager Sound { get { return Instance._sound; } }
+
+    ResourceManager _resource = new ResourceManager();
+    public static ResourceManager Resource { get { return Instance._resource; } }
+
+    AnimationManager _animation = new AnimationManager();
+    public static AnimationManager Animation { get { return Instance._animation; } }
     void Awake() {
         _data.setDataPath(Application.persistentDataPath + "/");
     }
@@ -64,6 +72,14 @@ public class Manager : MonoBehaviour
 
             // 동적으로 생성한 매니저 객체에 Manager 컴포넌트 부여
             s_instance = go.GetComponent<Manager>();
+
+            s_instance._sound.Init();
         }
+    }
+
+    public void Clear()
+    {
+        Input.Clear();
+        Sound.Clear();
     }
 }

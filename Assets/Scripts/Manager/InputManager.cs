@@ -14,4 +14,9 @@ public class InputManager
         if (KeyAction != null)  // 키 입력이 발생했고 KeyAction이 정의되어있을 시, Action 실행
             KeyAction.Invoke();
     }
+
+    public void Clear()
+    {
+        KeyAction = null;
+    }
 }
