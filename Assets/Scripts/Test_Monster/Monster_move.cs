@@ -7,9 +7,12 @@ public class Monster_move : MonoBehaviour
     Monster_pathfinding Monster_pathfinding;
     [SerializeField] float speed = 0.025f; //increase for faster movement
 
+    Animator anim;
+    AnimStates.State _state = AnimStates.State.Idle;
     void Start()
     {
         Monster_pathfinding = GetComponent<Monster_pathfinding>();
+        anim = GameObject.Find($"{gameObject.name}_Anim").GetComponent<Animator>();
     }
 
     void FixedUpdate()
@@ -29,7 +32,10 @@ public class Monster_move : MonoBehaviour
             {
                 Debug.DrawLine(Monster_pathfinding.pathLeftToGo[i], Monster_pathfinding.pathLeftToGo[i+1]);
             }
+
         }
+        MonsterAnim();
+
     }
 
     void MonsterTurn(Vector3 targetPosition) {
@@ -37,5 +43,21 @@ public class Monster_move : MonoBehaviour
 
         float turnDeg = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, turnDeg + 90);
+    }
+
+    void MonsterAnim()
+    {
+        float mob_direction = transform.eulerAngles.z;
+        if (mob_direction > 180)
+        {
+            mob_direction -= 360;
+        }
+        if (Monster_pathfinding.pathLeftToGo.Count == 0) {
+            _state = AnimStates.State.Idle;
+        }
+        else {
+            _state = AnimStates.State.Walk;
+        }
+        Manager.Animation.Play(anim, _state, -mob_direction);
     }
 }

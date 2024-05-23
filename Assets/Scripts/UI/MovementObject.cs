@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MovementObject : MonoBehaviour
 {
-    AnimStates.Direction _dir;
     AnimStates.State _state;
+    private float dir = 0;
 
     [SerializeField]
     private VirtualJoystick virtualJoystick;
@@ -67,24 +67,15 @@ public class MovementObject : MonoBehaviour
         animspeed = Mathf.Sqrt(Mathf.Pow(direction.x, 2) + Mathf.Pow(direction.y, 2));
         anim.SetFloat("animspeed", animspeed);
 
-        float dir = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
-        GetDirection(dir);
+        dir = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg;
 
-        Manager.Animation.Play(anim, _state, _dir);
-    }
-
-    void GetDirection(float dir)
-    {
-        if (dir <= 45.0 && dir >= -45.0) _dir = AnimStates.Direction.Up;
-        else if (dir >= 45.0 && dir <= 135.0) _dir = AnimStates.Direction.Right;
-        else if (dir <= -45.0 && dir >= -135.0) _dir = AnimStates.Direction.Left;
-        else _dir = AnimStates.Direction.Down;
+        Manager.Animation.Play(anim, _state, dir);
     }
 
     void PlayerIdle()
     {
         _state = AnimStates.State.Idle;
-        Manager.Animation.Play(anim, _state, _dir);
+        Manager.Animation.Play(anim, _state, dir);
     }
 
     // 플레이어가 움직일 수 있는지 여부를 설정하는 메소드
